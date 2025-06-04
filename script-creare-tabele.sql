@@ -31,5 +31,5 @@ CREATE TABLE DISTANCE (
     distance NUMBER NOT NULL,
 
     CONSTRAINT fk_distance_from FOREIGN KEY (id_from) REFERENCES LOCATION(id),
-    CONSTRAINT fk_distance_to FOREIGN KEY (id_to) REFERENCES LOCATION(id)
+    CONSTRAINT fk_distance_to FOREIGN KEY (id_to) REFERENCES LOCATION(id)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 );
