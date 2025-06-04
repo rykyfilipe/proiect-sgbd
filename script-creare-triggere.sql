@@ -2,6 +2,16 @@ CREATE OR REPLACE TRIGGER trg_set_expected_date
 BEFORE UPDATE ON ORDERS
 FOR EACH ROW
 BEGIN
+
+    BEGIN
+        IF :NEW.distance IS NULL THEN
+            raise_application_error(-20000, 'Distance is not found for thie order.');
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            NULL; 
+    END;    
+
     IF :NEW.status = 'pending' AND :OLD.status != 'pending' THEN
         :NEW.expected_date := SYSDATE + (:NEW.distance * 5) / (24 * 60);
     END IF;
@@ -28,9 +38,19 @@ FOR EACH ROW
 DECLARE
     next_id NUMBER;
 BEGIN
+    DECLARE
+        v_id NUMBER;
+    BEGIN
+        SELECT 1 INTO v_id FROM USERS WHERE name = :NEW.name;
+        raise_application_error(-20000, 'User with same name already exists.');
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            NULL; 
+    END;
+
     IF :NEW.id IS NULL THEN
-        SELECT MAX(id) INTO next_id FROM USERS;
-        :NEW.id := next_id + 1;
+        SELECT NVL(MAX(id), 0) + 1 INTO next_id FROM USERS;
+        :NEW.id := next_id;
     END IF;
 END;
 /
