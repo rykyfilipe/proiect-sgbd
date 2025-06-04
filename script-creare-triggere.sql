@@ -8,3 +8,29 @@ BEGIN
     
 END;
 /
+
+CREATE OR REPLACE TRIGGER trg_orders_autoinc
+BEFORE INSERT ON ORDERS
+FOR EACH ROW
+DECLARE
+    next_id NUMBER;
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT MAX(id) INTO next_id FROM ORDERS;
+        :NEW.id := next_id + 1;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER trg_users_autoinc
+BEFORE INSERT ON USERS
+FOR EACH ROW
+DECLARE
+    next_id NUMBER;
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT MAX(id) INTO next_id FROM USERS;
+        :NEW.id := next_id + 1;
+    END IF;
+END;
+/
