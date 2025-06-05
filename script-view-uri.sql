@@ -1,5 +1,8 @@
 CREATE OR REPLACE VIEW CLIENT_ORDER AS 
-SELECT o.id, o.status, o.distance FROM ORDERS o;
+SELECT o.id, o.status, o.distance, u.name, u.phone_number
+    FROM ORDERS o 
+    JOIN USERS u ON o.id_curier = u.id
+;
 
 CREATE OR REPLACE VIEW CURIER_ORDER AS 
 SELECT u.NAME, u.PHONE_NUMBER, o.ID, o.ID_FROM,o.ID_TO, o.DISTANCE, o.STATUS

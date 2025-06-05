@@ -2,22 +2,18 @@ CREATE OR REPLACE TRIGGER trg_set_expected_date
 BEFORE UPDATE ON ORDERS
 FOR EACH ROW
 BEGIN
+    IF UPDATING('status') THEN
+        IF :NEW.status = 'pending' AND :OLD.status != 'pending' THEN
+            IF :NEW.distance IS NULL THEN
+                raise_application_error(-20000, 'Distance is not found for this order.');
+            END IF;
 
-    BEGIN
-        IF :NEW.distance IS NULL THEN
-            raise_application_error(-20000, 'Distance is not found for thie order.');
+            :NEW.expected_date := SYSDATE + (:NEW.distance * 5) / (24 * 60);
         END IF;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            NULL; 
-    END;    
-
-    IF :NEW.status = 'pending' AND :OLD.status != 'pending' THEN
-        :NEW.expected_date := SYSDATE + (:NEW.distance * 5) / (24 * 60);
     END IF;
-    
 END;
 /
+
 
 CREATE OR REPLACE TRIGGER trg_orders_autoinc
 BEFORE INSERT ON ORDERS

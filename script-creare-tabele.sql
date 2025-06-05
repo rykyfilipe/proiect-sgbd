@@ -16,10 +16,13 @@ CREATE TABLE ORDERS (
     id_client NUMBER NOT NULL,
     id_from NUMBER NOT NULL,
     id_to NUMBER NOT NULL,
+    id_curier NUMBER DEFAULT NULL,
+    distance NUMBER DEFAULT NULL,
     status VARCHAR2(50) NOT NULL,
     created_at DATE,
 
     CONSTRAINT fk_id_client FOREIGN KEY (id_client) REFERENCES USERS(id),
+    CONSTRAINT fk_id_curier FOREIGN KEY (id_curier) REFERENCES USERS(id),
     CONSTRAINT fk_id_from FOREIGN KEY (id_from) REFERENCES LOCATION(id),
     CONSTRAINT fk_id_to FOREIGN KEY (id_to) REFERENCES LOCATION(id)
 );

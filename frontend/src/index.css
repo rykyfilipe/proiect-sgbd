@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@layer components {
+	.costum-shadow {
+		box-shadow:
+			inset 2px 2px 8px #d0d0d0,
+			inset -2px -2px 6px #f0f0f0,
+			-6px -6px 10px rgba(255, 255, 255, 0.8),
+			4px 4px 15px rgba(0, 0, 0, 0.15);
+	}
+	.input {
+		background-color: #eaeaea;
+
+		box-shadow:
+			inset 4px 4px 12px rgb(170, 168, 170),
+			inset -4px -4px 12px white;
+		color: #26282b;
+		border-radius: 30px;
+		border: 1px solid rgb(82, 80, 80);
+	}
+}
