@@ -15,12 +15,16 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/user",
-		element: <Client />,
+		element: (
+			<ProtectedRoute route='user'>
+				<Client />
+			</ProtectedRoute>
+		),
 	},
 	{
 		path: "/delivery",
 		element: (
-			<ProtectedRoute>
+			<ProtectedRoute route='delivery'>
 				<Curier />
 			</ProtectedRoute>
 		),

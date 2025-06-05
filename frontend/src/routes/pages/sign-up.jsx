@@ -3,25 +3,50 @@ import { useNavigate } from "react-router-dom";
 
 function SignUp() {
 	const [name, setName] = useState("");
-	const [role, setRole] = useState("client");
+	const [role, setRole] = useState("user");
 	const [password, setPassword] = useState("");
 	const [phone, setPhone] = useState("");
 
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 
-	const handleLogin = (e) => {
+	const handleLogin = async (e) => {
 		e.preventDefault();
+		try {
+			const response = await fetch("http://192.168.1.89:5000/api/sign-up", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					name: name,
+					password: password,
+					phone_number: phone,
+					role: role,
+				}),
+			});
 
-		if (name === "admin" && password === "1234") {
-			localStorage.setItem("token", "mock-token");
-			if (role === "client") {
-				navigate("/user");
-			} else {
-				navigate("/delivery");
+			if (!response.ok) {
+				setError(response.message);
+				return;
 			}
-		} else {
-			setError("Nume sau parolă greșite.");
+
+			const data = await response.json();
+			const { access_token, id } = data;
+			console.log(access_token + " " + id);
+			const user = {
+				name: name,
+				id: id,
+			};
+
+			localStorage.setItem("token", access_token);
+			localStorage.setItem("user_id", id);
+			localStorage.setItem("user", JSON.stringify(user));
+
+			navigate(role === "user" ? "/user" : "/delivery");
+		} catch (err) {
+			console.error("Login error:", err);
+			setError("Failed to connect to server.");
 		}
 	};
 
@@ -67,12 +92,12 @@ function SignUp() {
 					className=''>
 					<option
 						className='option'
-						value='client'>
+						value='user'>
 						User
 					</option>
 					<option
 						className='option'
-						value='curier'>
+						value='delivery'>
 						Delivery
 					</option>
 				</select>

@@ -24,7 +24,9 @@ BEGIN
     IF :NEW.id IS NULL THEN
         SELECT MAX(id) INTO next_id FROM ORDERS;
         :NEW.id := next_id + 1;
-    END IF;
+        :NEW.status := 'created';
+        :NEW.created_at := SYSDATE;
+        END IF;
 END;
 /
 
