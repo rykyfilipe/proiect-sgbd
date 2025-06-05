@@ -88,7 +88,6 @@ export default function Client() {
 			}
 
 			const data = await response.json();
-			console.log(data);
 			setOrders(data);
 		} catch (err) {
 			setError("Failed to load orders. Please try again.");
@@ -214,11 +213,12 @@ export default function Client() {
 			)}
 
 			<div className='w-full max-w-4xl flex flex-col bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.1)] p-6 gap-4 overflow-auto'>
-				<div className='grid grid-cols-4 text-sm font-medium uppercase text-gray-500 border-b pb-2 gap-4'>
+				<div className='grid grid-cols-6 text-sm font-medium uppercase text-gray-500 border-b pb-2 gap-4'>
 					<span>ID</span>
 					<span>Distance (km)</span>
-					<span>Courier</span>
 					<span>Status</span>
+					<span>Delivery name</span>
+					<span>Delivery phone</span>
 				</div>
 
 				{orders.length === 0 ? (
@@ -229,18 +229,17 @@ export default function Client() {
 					orders.map((order) => (
 						<div
 							key={order.id}
-							className='grid grid-cols-4 py-3 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition gap-4 items-center'>
+							className='grid grid-cols-6 py-3 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition gap-4 items-center'>
 							<p className='text-gray-800 font-medium'>#{order.id}</p>
 							<p className='text-gray-800'>{order.distance} km</p>
-							<div className='text-gray-800'>
-								<p className='font-medium'>{order.courier?.name || "N/A"}</p>
-								<p className='text-sm text-gray-500'>
-									{order.courier?.phone || "-"}
-								</p>
-							</div>
+
 							<p
 								className={`font-medium capitalize ${getStatusColor(order.status)}`}>
 								{order.status}
+							</p>
+							<p className='font-medium'>{order.curier_name || "N/A"}</p>
+							<p className='text-sm text-gray-500'>
+								{order.phone_number || "N/A"}
 							</p>
 						</div>
 					))
