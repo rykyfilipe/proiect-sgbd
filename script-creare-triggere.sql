@@ -52,3 +52,28 @@ BEGIN
     END IF;
 END;
 /
+create or replace TRIGGER add_min_distance 
+    BEFORE INSERT ON orders
+    FOR EACH ROW
+DECLARE
+    v_count NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO v_count
+    FROM location
+    WHERE id = :NEW.id_from;
+
+    IF v_count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Start location does not exist');
+    END IF;
+
+    -- Verificare id_to în tabela location
+    SELECT COUNT(*) INTO v_count
+    FROM location
+    WHERE id = :NEW.id_to;
+
+    IF v_count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'ENd location does not exist');
+    END IF;
+    -- Setăm automat coloana distance
+    :NEW.distance := get_min_distance(:NEW.id_from, :NEW.id_to);
+END;
